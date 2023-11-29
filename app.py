@@ -44,14 +44,17 @@ def createUser():
     elif (len(email) <= 0 or len(password) <= 0):
         data = {"status" : False, "message" : "Invalid data"}
         return jsonify(data)
-
-    query = {
+    elif (checkUserExistsOrNot(email) is True):
+        query = {
         "email": email, "password": password
-    }
+        }
+        collection.insert_one(query)
+        data = {"status" : True, "message" : "User created successfully"}
+        return jsonify(data)
+    else:
+        data = {"status" : False, "message" : "User already exists"}
+        return jsonify(data)
 
-    collection.insert_one(query)
-    data = {"status" : True}
-    return jsonify(data)
 
 @app.route("/update", methods=['PUT'])
 def updatePassword():
@@ -79,6 +82,19 @@ def updatePassword():
     else:
         data = {"status" : True, "message" : "Password updated successfully"}
         return jsonify(data)
+    
+
+def checkUserExistsOrNot(email):
+    dbs = client.cleanHires
+    collection = dbs.users
+
+    query = {"email" : email}
+    response = collection.count_documents(query)
+    if(response == 0):
+        return True
+    else :
+        return False
+
 
 if __name__ == '__main__':
     app.run(debug=True)
