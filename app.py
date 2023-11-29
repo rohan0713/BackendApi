@@ -63,12 +63,10 @@ def updatePassword():
     collection = dbs.users
 
     email = request.args.get('email')
-    password = request.args.get('password')
-
-    newPassword = request.args.get('new')
+    newPassword = request.args.get('password')
 
     query = {
-        "email": email, "password": password
+        "email": email
     }
 
     value = {"$set" : {
