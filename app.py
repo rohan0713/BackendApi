@@ -39,9 +39,11 @@ def createUser():
     print(password)
     
     if(email is None or password is None):
-        return jsonify('Add valid query params in url')
+        data = {"status" : False, "message" : "Invalid information"}
+        return jsonify(data)
     elif (len(email) <= 0 or len(password) <= 0):
-        return jsonify('Invalid data')
+        data = {"status" : False, "message" : "Invalid data"}
+        return jsonify(data)
 
     query = {
         "email": email, "password": password
@@ -72,9 +74,11 @@ def updatePassword():
 
     response = collection.update_one(query, value)
     if response.matched_count == 0:
-        return 'No data found', 404
+        data = {"status" : False, "message" : "No user found"}
+        return jsonify(data)
     else:
-        return 'Email updated successfully'
+        data = {"status" : True, "message" : "Password updated successfully"}
+        return jsonify(data)
 
 if __name__ == '__main__':
     app.run(debug=True)
